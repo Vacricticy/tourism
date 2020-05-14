@@ -1,0 +1,9 @@
+
+.scroll-Y {
+	height: calc(100vh);
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+	padding: 8px;
+	background-color: #F1F1F1;
+}
+

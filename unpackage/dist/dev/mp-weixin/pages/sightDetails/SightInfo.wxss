@@ -1,0 +1,63 @@
+.container.data-v-72f97974 {
+  width: 100%;
+  border-radius: 8px;
+  padding: 6px;
+  background-color: #fff;
+}
+.head.data-v-72f97974 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #C8C7CC;
+}
+.head .sightName.data-v-72f97974 {
+  font-weight: bold;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  padding-left: 10px;
+  font-size: 24px;
+}
+.head .score.data-v-72f97974 {
+  -webkit-flex-basis: 34%;
+          flex-basis: 34%;
+  font-size: 15px;
+  border-left: 1px solid #C8C7CC;
+  padding-left: 5px;
+}
+.head .score .point.data-v-72f97974 {
+  font-size: 20px;
+  font-weight: bold;
+}
+.head .score .uni-rate.data-v-72f97974 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.head .score .num.data-v-72f97974 {
+  color: red;
+  font-size: 10px;
+}
+.time.data-v-72f97974 {
+  font-size: 12px;
+  line-height: 30px;
+  border-bottom: 1px solid #C8C7CC;
+}
+.address.data-v-72f97974 {
+  font-size: 15px;
+  line-height: 30px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  cursor: pointer;
+}
+.address .addressName.data-v-72f97974 {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+}
+.address .map.data-v-72f97974 {
+  -webkit-flex-basis: 5%;
+          flex-basis: 5%;
+}
+

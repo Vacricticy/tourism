@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "sight": "/pages/component/sight"
+  },
+  "component": true
+}

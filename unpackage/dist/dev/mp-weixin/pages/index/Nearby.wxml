@@ -1,0 +1,1 @@
+<view><scroll-view class="scroll-Y" scroll-y="true"><block wx:for="{{nearbySights}}" wx:for-item="item" wx:for-index="index" wx:key="index"><sight vue-id="{{'ced9cb9e-1-'+index}}" sight="{{item}}" bind:__l="__l"></sight></block></scroll-view></view>

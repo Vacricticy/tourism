@@ -1,0 +1,1 @@
+<view><block wx:for="{{picList}}" wx:for-item="x" wx:for-index="y" wx:key="y"><view data-event-opts="{{[['tap',[['clickPic',[y]]]]]}}" bindtap="__e"><image src="{{x.picPath}}"></image></view></block><view data-event-opts="{{[['tap',[['map',['$event']]]]]}}" bindtap="__e">查看地图</view><view data-event-opts="{{[['tap',[['comment',['$event']]]]]}}" bindtap="__e">评论</view></view>

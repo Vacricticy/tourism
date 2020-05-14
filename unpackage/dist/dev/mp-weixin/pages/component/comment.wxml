@@ -1,0 +1,1 @@
+<view><view data-event-opts="{{[['tap',[['chooseImg',['$event']]]]]}}" bindtap="__e">选择图片</view><view class="imageList"><block wx:for="{{imgSrc}}" wx:for-item="item" wx:for-index="index" wx:key="index"><view><image src="{{item}}" mode="aspectFill"></image></view></block></view></view>

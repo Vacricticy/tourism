@@ -1,0 +1,15 @@
+
+.imageList {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	        flex-wrap: wrap;
+	-webkit-justify-content: space-around;
+	        justify-content: space-around;
+}
+image {
+	width: 120px;
+	height: 120px;
+}
+

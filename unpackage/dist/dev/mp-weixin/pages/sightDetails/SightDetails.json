@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "sightinfo": "/pages/sightDetails/SightInfo"
+  }
+}
