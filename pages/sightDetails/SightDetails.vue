@@ -26,7 +26,7 @@
 				<view class="ticketBox">
 					<text class="ticketTitle">门票预订</text>
 				</view>
-				<view class="order">
+				<view class="order" @click="order">
 					预订
 				</view>
 			</view>
@@ -102,6 +102,13 @@
 			// 下拉刷新
 			showMore() {
 				this.commentNum += 2
+			},
+			// 预定
+			order(){
+				uni.setStorageSync("status",0);
+				uni.navigateTo({
+					url: '/pages/component/OrderDetails'
+				})
 			}
 		}
 	}

@@ -27,9 +27,6 @@
 			}
 		},
 		{
-			"path": "pages/out_home/home",
-			"style": {}
-		}, {
 			"path": "pages/component/imgPreview",
 			"style": {
 				"navigationBarTitleText": "图片详情"
@@ -66,7 +63,17 @@
 				"navigationBarTitleText": "上传头像"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/component/OrderDetails",
+            "style": {
+            	"navigationBarTitleText": "订单详情"
+            }
+        }
+        ,{
+            "path" : "pages/component/addComment",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

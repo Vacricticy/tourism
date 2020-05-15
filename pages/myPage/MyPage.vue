@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="container">
+		<view class="container" v-if="islogin">
 			<view class="bg_img">
 				<view class="myInfo">
 					<image :src="url" mode=""></image>
@@ -37,14 +37,28 @@
 					</view>
 					<view class="avatar xxxTitle">
 						<!-- <text @click="" class="xxxtitleBox">上传头像</text> -->
-						<avatar  selWidth="200px" selHeight="400upx" @upload="myUpload" :avatarSrc="url" avatarStyle="width: 200upx; height: 200upx; border-radius: 100%;">
+						<avatar selWidth="200px" selHeight="400upx" @upload="myUpload" :avatarSrc="url" avatarStyle="width: 200upx; height: 200upx; border-radius: 100%;">
 						</avatar>
+					</view>
+					<view class="loginOutBox xxxTitle">
+						<text class="loginOut xxxtitleBox" @click="loginOut">退出登录</text>
 					</view>
 				</view>
 
 			</view>
 		</view>
+		<view class="loginBox" v-else>
+			<view class="imageBox">
+				<image src="../../static/logo3.png" mode=""></image>
+			</view>
+			<input type="text" value="" placeholder="请输入用户名" />
+			<input type="password" value="" placeholder="请输入密码" />
+			<view class="loginButton">
+				<text @click="login">登录</text>
+				<text>注册</text>
+			</view>
 
+		</view>
 	</view>
 </template>
 
@@ -58,6 +72,8 @@
 		},
 		data() {
 			return {
+				islogin: false,
+				username: 'liuxiaokang',
 				sightList: [{
 						id: '1',
 						imgSrc: '../../static/sights/sight1.jpg'
@@ -80,15 +96,16 @@
 					url: '/pages/myPage/Collect'
 				})
 			},
-			// uploadAvatar() {
-			// 	uni.navigateTo({
-			// 		url: '/pages/myPage/UploadAvatar'
-			// 	})
-			// },
 			myUpload(rsp) {
 				this.url = rsp.path; //更新头像方式一
 				console.log(this.url)
 				//rsp.avatar.imgSrc = rsp.path; //更新头像方式二
+			},
+			login(){
+				this.islogin=true
+			},
+			loginOut(){
+				this.islogin=false
 			}
 		},
 	}
@@ -101,7 +118,7 @@
 	}
 
 	.bg_img {
-		height: 430rpx;
+		height: 340rpx;
 		background: url(../../static/sights/sight3.jpg);
 		background-size: 100% 100%;
 		display: flex;
@@ -152,7 +169,7 @@
 				padding: 2px;
 				border-radius: 5px;
 				color: #fff;
-				background-color: #ffb573;
+				background-color: #ff6f6f;
 				margin-right: 10px;
 				font-weight: bold;
 			}
@@ -162,7 +179,7 @@
 				padding: 2px;
 				border-radius: 5px;
 				color: #fff;
-				background-color: #6ad8ff;
+				background-color: #39baff;
 			}
 		}
 	}
@@ -188,7 +205,7 @@
 				padding: 2px;
 				border-radius: 5px;
 				color: #fff;
-				background-color: #ffb573;
+				background-color: #99df60;
 				margin-right: 10px;
 			}
 		}
@@ -210,12 +227,70 @@
 		display: flex;
 		justify-content: space-between;
 	}
+
 	.xxxtitleBox {
 		line-height: 28px;
 		font-size: 15px;
 		padding: 2px;
 		border-radius: 5px;
 		color: #fff;
-		background-color: #6ad8ff;
+		background-color: #39baff;
+	}
+
+	.loginBox {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		height: calc(100vh);
+		background-color: #F1F1F1;
+	}
+
+	.imageBox {
+		width: 100px;
+		height: 100px;
+		border: 1px solid #F1F1F1;
+		border-radius: 50%;
+		padding: 5px;
+		box-shadow: 0 0 10px #C8C7CC;
+		background-color: #fff;
+		margin-bottom: 20px;
+
+		image {
+			width: 100%;
+			height: 100%;
+			border-radius: 50%;
+		}
+	}
+
+	input {
+		margin: 10px;
+		border: 1px solid #C8C7CC;
+		border-radius: 10px;
+		box-shadow: 2px 2px 10px #C8C7CC;
+		width: 80%;
+		height: 55px;
+		background-color: #fff;
+		padding-left: 5px;
+	}
+
+	.loginButton {
+		margin-top: 20px;
+		width: 80%;
+		display: flex;
+		justify-content: space-around;
+		text {
+			text-align: center;
+			width: 120px;
+			color: #fff;
+			background-color: #9ac756;
+			border-radius: 5px;
+			box-shadow: 3px 3px 8px #aaaaaa;
+			// margin-left: 10px;
+			// margin-right: 10px;
+		}
+	}
+	.loginOut{
+		background-color: #ffb253;
 	}
 </style>

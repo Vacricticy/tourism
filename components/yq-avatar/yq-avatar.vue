@@ -1340,6 +1340,6 @@
 		padding: px;
 		border-radius: 5px;
 		color: #fff;
-		background-color: #6ad8ff;
+		background-color: #39baff;
 	}
 </style>
