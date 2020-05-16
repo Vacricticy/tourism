@@ -1,20 +1,20 @@
 <template>
 	<view class="sight" @click="showSightDetail">
 		<view class="picture">
-			<image :src="sight.imgSrc" mode="aspectFill"></image>
+			<image :src="sight.viewPics.split(',')[0]" mode="aspectFill"></image>
 		</view>
 		<view class="content">
-			<text class="sightName">崇人谷景区</text>
+			<text class="sightName">{{sight.viewName}}</text>
 			<view class="evaluate">
-				<uni-rate value="3.9" disabled size="12"></uni-rate>
-				<text class="score">3.9分</text>
-				<text>| 220条评价</text>
+				<uni-rate :value="sight.viewScore" disabled size="12"></uni-rate>
+				<text class="score">{{sight.viewScore}}分</text>
+				<text>| {{sight.viewMarkNum}}条评价</text>
 			</view>
 			<view class="distance">
-				距我37.4km
+				距我{{sight.distance}}km
 			</view>
 			<view class="price">
-				￥40
+				￥{{sight.viewMoney}}
 			</view>
 		</view>
 	</view>
@@ -31,13 +31,14 @@
 		},
 		data() {
 			return {
-
+				// sight: {}
 			}
 		},
 		methods: {
 			showSightDetail() {
+				let url = '/pages/sightDetails/SightDetails?sightId=' + this.sight.id;
 				uni.navigateTo({
-					url:'/pages/sightDetails/SightDetails'
+					url: url
 				})
 			}
 		}

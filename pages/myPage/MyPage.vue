@@ -51,11 +51,11 @@
 			<view class="imageBox">
 				<image src="../../static/logo3.png" mode=""></image>
 			</view>
-			<input type="text" value="" placeholder="请输入用户名" />
-			<input type="password" value="" placeholder="请输入密码" />
+			<input type="text" value="" placeholder="请输入用户账号" v-model="userId" />
+			<input type="password" value="" placeholder="请输入密码" v-model="password" />
 			<view class="loginButton">
 				<text @click="login">登录</text>
-				<text>注册</text>
+				<text @click="register">注册</text>
 			</view>
 
 		</view>
@@ -73,7 +73,8 @@
 		data() {
 			return {
 				islogin: false,
-				username: 'liuxiaokang',
+				userId: '',
+				password: '',
 				sightList: [{
 						id: '1',
 						imgSrc: '../../static/sights/sight1.jpg'
@@ -90,6 +91,11 @@
 				url: "../../static/sights/sight1.jpg"
 			}
 		},
+		created(){
+			if(uni.getStorageSync('userId')){
+				this.islogin=true
+			}
+		},
 		methods: {
 			more() {
 				uni.navigateTo({
@@ -101,11 +107,74 @@
 				console.log(this.url)
 				//rsp.avatar.imgSrc = rsp.path; //更新头像方式二
 			},
-			login(){
-				this.islogin=true
+			// 登录功能
+			login() {
+				if (this.userId.trim() == '' || this.password.trim() == '') {
+					uni.showToast({
+						title: '输入不能为空',
+						duration: 1000
+					})
+				} else {
+					uni.request({
+						url: 'http://117.78.2.192:8090/user/login',
+						method: 'POST',
+						data: {
+							userNumber: this.userId,
+							userPwd: this.password
+						},
+						success: (res) => {
+							console.log(res.data.status)
+							if (res.data.status != 200) {
+								uni.showToast({
+									title: '账号或密码有误',
+									duration: 1200
+								})
+							} else {
+								this.islogin = true;
+								uni.setStorageSync("userId", this.userId)
+							}
+						}
+					});
+				}
 			},
-			loginOut(){
-				this.islogin=false
+			// 注册功能
+			register() {
+				if (this.userId.trim() == '' || this.password.trim() == '') {
+					uni.showToast({
+						title: '输入不能为空',
+						duration: 1000
+					})
+				} else {
+					uni.request({
+						url: 'http://117.78.2.192:8090/user/register',
+						method: 'POST',
+						data: {
+							userNumber: this.userId,
+							userPwd: this.password
+						},
+						success: (res) => {
+							// console.log(res.data.status)
+							if (res.data.status != 200) {
+								uni.showToast({
+									title: '账号已被注册',
+									duration: 1200
+								})
+							} else {
+								uni.showToast({
+									title: '注册成功',
+									duration: 1200
+								})
+								this.islogin = true;
+								uni.setStorageSync("userId", this.userId)
+								console.log('用户id'+this.userId)
+							}
+						}
+					});
+				}
+			},
+			//退出功能
+			loginOut() {
+				this.islogin = false
 			}
 		},
 	}
@@ -279,6 +348,7 @@
 		width: 80%;
 		display: flex;
 		justify-content: space-around;
+
 		text {
 			text-align: center;
 			width: 120px;
@@ -290,7 +360,8 @@
 			// margin-right: 10px;
 		}
 	}
-	.loginOut{
+
+	.loginOut {
 		background-color: #ffb253;
 	}
 </style>

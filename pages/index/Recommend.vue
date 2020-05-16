@@ -26,42 +26,34 @@
 		methods: {
 			// 获取推荐景点
 			getRecommendSights() {
-				this.recommendSights = [{
-						id: '1',
-						imgSrc: '../../static/sights/sight1.jpg'
+				uni.request({
+					url: 'http://117.78.2.192:8090/view/info',
+					method: 'POST',
+					data: {
+						latitude: 0,
+						longitude: 0,
+						model: 'recommand',
+						name: ''
 					},
-					{
-						id: '2',
-						imgSrc: '../../static/sights/sight2.jpg'
-					},
-					{
-						id: '3',
-						imgSrc: '../../static/sights/sight3.jpg'
-					},
-					{
-						id: '4',
-						imgSrc: '../../static/sights/sight4.jpg'
-					},
-					{
-						id: '3',
-						imgSrc: '../../static/sights/sight3.jpg'
-					},
-					{
-						id: '4',
-						imgSrc: '../../static/sights/sight4.jpg'
+					success: (res) => {
+						// console.log(res.data.data.length)
+						if (res.data.status == 200) {
+							this.recommendSights = res.data.data;
+							console.log(res.data.data[0].viewPics.split(',')[0])
+						}
 					}
-				]
+				})
 			},
 			// 下拉刷新
 			showMore() {
-				console.log(222222)
-				for (let i = 0; i < 4; i++) {
-					this.recommendSights.push({
-						id: '4',
-						imgSrc: '../../static/sights/sight4.jpg'
-					})
-					console.log(this.recommendSights.length)
-				}
+				// console.log(222222)
+				// for (let i = 0; i < 4; i++) {
+				// 	this.recommendSights.push({
+				// 		id: '4',
+				// 		imgSrc: '../../static/sights/sight4.jpg'
+				// 	})
+				// 	console.log(this.recommendSights.length)
+				// }
 
 			}
 		}

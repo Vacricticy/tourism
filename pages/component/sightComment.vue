@@ -3,20 +3,20 @@
 		<view class="commentBox">
 			<view class="head">
 				<view class="avatar">
-					<image src="../../static/sights/sight3.jpg" mode=""></image>
+					<image :src="oneComment.userPhoFile" mode=""></image>
 				</view>
 				<view class="name_score">
-					<text class="name">听雨小秋</text>
+					<text class="name">{{oneComment.userName}}</text>
 					<view class="score">
-						<text>打分</text><uni-rate value="3.9" disabled size="12"></uni-rate>
+						<text>打分</text><uni-rate :value="oneComment.reviewScore" disabled size="12"></uni-rate>
 					</view>
 				</view>
 				<view class="date">
-					5月2日
+					{{oneComment.trueTime}}
 				</view>
 			</view>
 			<view class="content">
-				{{content}}
+				{{oneComment.reviewContent}}
 			</view>
 		</view>
 	</view>
@@ -25,12 +25,15 @@
 <script>
 	import uniRate from '../../components/uni-rate/uni-rate.vue'
 	export default {
+		props:[
+			'oneComment'
+		],
 		components:{
 			uniRate
 		},
 		data() {
 			return {
-				content: '淡黄的长裙,蓬松的头发,牵着我的手看最新展出的油画,无人的街道,在空荡的家里,就只剩我一个人狂欢的party,就当是一场梦,醒了还是很感动,还是很想被你保护我心里的惨痛,喜欢我很辛苦,其实我都清楚,放心这世界很大我记得你的叮嘱,'
+				
 			}
 		},
 		methods: {
@@ -89,6 +92,6 @@
 	}
 
 	.content {
-		
+		margin-top: 10px;
 	}
 </style>

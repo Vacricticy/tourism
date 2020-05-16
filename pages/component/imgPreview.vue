@@ -4,7 +4,7 @@
 			<swiper @change="changeSwiper" class="my_swiper" :current="current" :circular="circular" :indicator-dots="indicatorDots"
 			 :autoplay="autoplay" :duration="duration">
 				<swiper-item v-for="(x, y) in picList" :key="y">
-					<view class="bg_img" :style="{ backgroundImage: 'url('+x.imgSrc+')'}"></view>
+					<view class="bg_img" :style="{ backgroundImage: 'url('+x+')'}"></view>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -25,8 +25,13 @@
 				isShowSwiper: false
 			}
 		},
-		onLoad() {
-			this.picListInit(); 
+		onLoad(option) {
+			// this.picListInit(); 
+			// this.current=option.currentImgIndex;
+			console.log(option.currentImgIndex)
+			console.log(option.imgPreviewPicList.split(','))
+			this.current = Number(option.currentImgIndex);
+			this.picList = option.imgPreviewPicList.split(',')
 		},
 		methods: {
 			clickPic(index) {

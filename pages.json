@@ -17,7 +17,8 @@
 		{
 			"path": "pages/orders/Orders",
 			"style": {
-				"navigationBarTitleText": "我的订单"
+				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -62,18 +63,16 @@
 			"style": {
 				"navigationBarTitleText": "上传头像"
 			}
+		}, {
+			"path": "pages/component/OrderDetails",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		}, {
+			"path": "pages/component/addComment",
+			"style": {}
 		}
-	    ,{
-            "path" : "pages/component/OrderDetails",
-            "style": {
-            	"navigationBarTitleText": "订单详情"
-            }
-        }
-        ,{
-            "path" : "pages/component/addComment",
-            "style" : {}
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

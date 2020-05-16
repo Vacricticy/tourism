@@ -1,12 +1,12 @@
 <template>
 	<view class="sight" @click="showOrderDetail">
 		<view class="picture">
-			<image :src="order.imgSrc" mode="aspectFill"></image>
+			<image :src="order.viewPics.split(',')[0]" mode="aspectFill"></image>
 		</view>
 		<view class="content">
-			<text class="sightName">崇人谷景区</text>
+			<text class="sightName">{{order.viewName}}</text>
 			<view class="price">
-				总金额：￥40
+				下单时间：{{order.orderTime}}
 			</view>
 		</view>
 		<view class="status">
@@ -40,7 +40,9 @@
 			showOrderDetail() {
 				uni.setStorageSync("status", this.order.status);
 				uni.navigateTo({
-					url: '/pages/component/OrderDetails'
+					url: '/pages/component/OrderDetails?sightId=' + this.order.viewId + '&price=' + this.order.orderMoney / this.order
+						.orderNum + '&pictureSrc=' + this.order.viewPics.split(',')[0] + '&isFromMyOrderPage=' + 'true' +
+						'&totalPrice=' + this.order.orderMoney + '&num=' + this.order.orderNum + '&date=' + this.order.orderTime
 				})
 			}
 		}

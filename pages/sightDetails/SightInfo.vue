@@ -3,16 +3,16 @@
 		<view class="container">
 			<view class="head">
 				<view class="sightName">
-					邓小平故居
-				</view>
+					{{sightDetail.viewName}}
+				</view> 
 				<view class="score">
-					<text class="point">4.7</text>分
-					<uni-rate value="3.9" disabled size="12"></uni-rate>
-					<text class="num">1124条评价</text>
+					<text class="point">{{sightDetail.viewScore}}</text>分
+					<uni-rate :value="aaa" disabled size="12"></uni-rate>
+					<text class="num">{{sightDetail.viewMarkNum}}条评价</text>
 				</view>
 			</view>
 			<view class="time">
-				正常营业 | 09:00开园
+				正常营业 | {{sightDetail.viewStartTime}}开园,{{sightDetail.viewStopTime}}闭馆
 			</view>
 			<view class="address" @click="map">
 				<text class="addressName">四川省广安市广安区协兴镇</text>
@@ -26,13 +26,19 @@
 <script>
 	import uniRate from '@/components/uni-rate/uni-rate.vue'
 	export default {
+		props: [
+			'sightDetail'
+		],
 		components: {
 			uniRate
 		},
 		data() {
 			return {
-
+				aaa:4
 			}
+		},
+		created(){
+			// console.log(this.sightDetail)/
 		},
 		methods: {
 			map() {

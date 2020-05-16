@@ -16,20 +16,44 @@
 		},
 		data() {
 			return {
-				orderList: [{
-					imgSrc: "../../static/sights/sight1.jpg",
-					status: 0
-				}, {
-					imgSrc: "../../static/sights/sight2.jpg",
-					status: 1
-				}, {
-					imgSrc: "../../static/sights/sight3.jpg",
-					status: 2
-				}]
+				orderList: []
 			}
 		},
+		created() {
+			this.getAllOrders()
+		},
+		//下拉刷新
+		onLoad: function(options) {
+			setTimeout(function() {
+				console.log('start pulldown');
+			}, 1000);
+			uni.startPullDownRefresh();
+		},
+		onPullDownRefresh() {
+			console.log('refresh');
+			this.getAllOrders()
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 1000);
+		},
 		methods: {
-			// 下拉刷新
+			//获取所有订单
+			getAllOrders() {
+				uni.request({
+					url: 'http://117.78.2.192:8090/order/getAllOrders',
+					method: 'GET',
+					data: {
+						userId: uni.getStorageSync("userId")
+					},
+					success: (res) => {
+						if (res.data.status == 200) {
+							this.orderList = res.data.data
+							console.log(this.orderList)
+						}
+					}
+				})
+			},
+			// 上拉刷新
 			showMore() {
 				console.log(222222)
 				for (let i = 0; i < 4; i++) {
@@ -46,7 +70,7 @@
 
 <style lang="less" scoped>
 	.scroll-Y {
-		height: calc(100vh);
+		// height: 100%;
 		box-sizing: border-box;
 		padding: 8px;
 		background-color: #F1F1F1;

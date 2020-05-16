@@ -2,6 +2,7 @@
 	<view>
 		<scroll-view scroll-y="true" class="scroll-Y">
 			<sight v-for="(item,index) in nearbySights" :key="index" :sight="item"></sight>
+			<uni-load-more status="loading"></uni-load-more>
 		</scroll-view>
 
 	</view>
@@ -9,9 +10,11 @@
 
 <script>
 	import sight from '../component/sight.vue'
+	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	export default {
 		components: {
-			sight
+			sight,
+			uniLoadMore
 		},
 		created() {
 			this.getNearbySights()
@@ -23,23 +26,23 @@
 		},
 		methods: {
 			getNearbySights() {
-				this.nearbySights = [{
-						id: '1',
-						imgSrc: '../../static/sights/sight1.jpg'
+				uni.request({
+					url: 'http://117.78.2.192:8090/view/info',
+					method: 'POST',
+					data: {
+						latitude: 0,
+						longitude: 0,
+						model: 'distance',
+						name: ''
 					},
-					{
-						id: '2',
-						imgSrc: '../../static/sights/sight2.jpg'
-					},
-					{
-						id: '3',
-						imgSrc: '../../static/sights/sight3.jpg'
-					},
-					{
-						id: '4',
-						imgSrc: '../../static/sights/sight4.jpg'
+					success: (res) => {
+						// console.log(res.data.data.length)
+						if (res.data.status == 200) {
+							this.nearbySights = res.data.data;
+							console.log(res.data.data[0].viewPics.split(',')[0])
+						}
 					}
-				]
+				})
 			}
 		}
 	}
@@ -47,7 +50,7 @@
 
 <style>
 	.scroll-Y {
-		height: calc(100vh);
+		height: calc(90vh);
 		box-sizing: border-box;
 		padding: 8px;
 		background-color: #F1F1F1;

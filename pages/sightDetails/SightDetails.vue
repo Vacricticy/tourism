@@ -1,20 +1,20 @@
 <template>
 	<view class="container">
 		<swiper class="swiper" indicator-dots="indicatorDots" autoplay="autoplay" interval="interval" duration="duration">
-			<swiper-item v-for="(item,index) in sightSrc" :key="index" @tap="clickPic(index)">
-				<image :src="item.imgSrc" mode="aspectFill"></image>
+			<swiper-item v-for="(item,index) in sightSrcList" :key="index" @tap="clickPic(index)">
+				<image :src="item" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		<view class="content">
 			<!-- 景点信息 -->
 			<view class="infoBox">
-				<sightinfo></sightinfo>
+				<sightinfo :sightDetail="sightDetail"></sightinfo>
 			</view>
 			<!-- 收藏 -->
 			<view class="collect">
-				<uni-fav :star="true" :checked="false" class="favBtn" circle="true" bg-color="#ff4b3e" bg-color-checked="#007aff"
-				 fg-color="#fff" @click=""></uni-fav>
-				<text class="collectAttach">加入收藏后可以从我的主页查看哦</text>
+				<uni-fav :star="true" :checked="sightDetail.keep" class="favBtn" circle="true" bg-color="#ff4b3e" bg-color-checked="#007aff"
+				 fg-color="#fff" @click="collect"></uni-fav>
+				<text class="collectAttach" v-if="!sightDetail.keep">加入收藏后可以从我的主页查看哦</text>
 			</view>
 			<!-- 景点通知 tips-->
 			<view class="notice">
@@ -36,8 +36,8 @@
 			</view>
 			<view class="sightComment">
 				<scroll-view scroll-y="true" class="scroll-Y" show-scrollbar="false" @scrolltolower="showMore">
-					<sight-comment v-for="(item,index) in commentNum" :key="index"></sight-comment>
-					<uni-load-more status="loading"></uni-load-more>
+					<sight-comment v-for="(item,index) in userComments" :key="index" :oneComment="item"></sight-comment>
+					<uni-load-more :status="isMore==0?'noMore':'loading'"></uni-load-more>
 				</scroll-view>
 			</view>
 
@@ -60,55 +60,115 @@
 		},
 		data() {
 			return {
+				currentCommentNum: 0,
+				totalCommentNum: 0,
+				isMore: 0, //是否存在更多评价,1表示存在
 				sightSrc: [],
-				commentNum: 5 //用户评价数量
+				userComments: [], //用户评价
+				totalComments: [], //用户所有评价
+				commentNum: 5, //用户评价数量
+				sightId: 0,
+				sightDetail: {}, //景点详情
+				sightSrcList: [] //景点图片
 			}
+		},
+		onLoad: function(option) { //option为object类型，会序列化上个页面传递的参数
+			// console.log(option.sightId); //打印出上个页面传递的参数。
+			this.sightId = option.sightId;
 		},
 		created() {
 			this.getData()
 		},
 		methods: {
 			getData() {
-				this.sightSrc = [{
-						id: '1',
-						imgSrc: '../../static/sights/sight1.jpg'
+				//获取景点详情
+				uni.request({
+					url: 'http://117.78.2.192:8090/view/by_id',
+					method: 'POST',
+					data: {
+						"id": this.sightId,
+						"userId": uni.getStorageSync("userId")
 					},
-					{
-						id: '2',
-						imgSrc: '../../static/sights/sight2.jpg'
-					},
-					{
-						id: '3',
-						imgSrc: '../../static/sights/sight3.jpg'
-					},
-					{
-						id: '4',
-						imgSrc: '../../static/sights/sight4.jpg'
+					success: (res) => {
+						// console.log(res.data.status)
+						if (res.data.status == 200) {
+							// console.log(res.data.data[0])
+							this.sightDetail = res.data.data[0];
+							console.log(uni.getStorageSync("userId") + this.sightDetail.keep)
+							this.sightSrcList = this.sightDetail.viewPics.split(',')
+							// console.log(this.sightSrcList)
+						}
 					}
-				]
-				uni.setStorageSync('imgPreviewPicList', this.sightSrc);
+				})
+				//获取景点评价
+				uni.request({
+					url: 'http://117.78.2.192:8090/review/getReviews',
+					method: 'GET',
+					data: {
+						viewId: this.sightId
+					},
+					success: (res) => {
+						if (res.data.status == 200) {
+							console.log(res.data.data)
+							this.totalComments = res.data.data
+							if (res.data.data.length > 3) {
+								this.userComments = res.data.data.slice(0, 4)
+								this.currentCommentNum = 3; //设置当前评价数量
+								this.totalCommentNum = res.data.data.length //设置总评价数量
+							} else {
+								this.userComments = res.data.data;
+								this.currentCommentNum = res.data.data.length; //设置当前评价数量
+								this.totalCommentNum = res.data.data.length //设置总评价数量
+								this.isMore = 0 //设置不存储更多数据
+							}
+
+						}
+					}
+				})
 			},
+			//点击查看图片详情
 			clickPic(index) {
-				uni.setStorageSync("currentImgIndex", index);
+				// uni.setStorageSync("currentImgIndex", index);
 				uni.navigateTo({
-					url: '/pages/component/imgPreview'
+					url: '/pages/component/imgPreview?currentImgIndex=' + index + '&imgPreviewPicList=' + this.sightSrcList
 				});
 			},
+			//查看景点通知
 			showNotice() {
+				// let url = '/pages/sightDetails/Notice?content=' + this.sightDetail.viewNotice;
 				uni.navigateTo({
-					url: '/pages/sightDetails/Notice'
+					url: '/pages/sightDetails/Notice?content=' + this.sightDetail.viewNotice
 				})
 			},
 			// 下拉刷新
 			showMore() {
-				this.commentNum += 2
+				if (this.totalCommentNum > this.currentCommentNum) {
+					// this.currentCommentNum += 2;
+					// this.userComments =this.totalComments.slice(0, this.currentCommentNum)
+				}
 			},
 			// 预定
-			order(){
-				uni.setStorageSync("status",0);
+			order() {
+				uni.setStorageSync("status", -1);
 				uni.navigateTo({
-					url: '/pages/component/OrderDetails'
+					url: '/pages/component/OrderDetails?sightId=' + this.sightId+'&price='+this.sightDetail.viewMoney+'&pictureSrc='+this.sightSrcList[0]
 				})
+			},
+			// 收藏功能
+			collect() {
+				uni.request({
+					url: 'http://117.78.2.192:8090/keep',
+					method: 'POST',
+					data: {
+						"userId": uni.getStorageSync("userId"),
+						"viewId": this.sightDetail.id
+					},
+					success: (res) => {
+
+					}
+
+				})
+				this.sightDetail.keep = true
 			}
 		}
 	}
@@ -167,6 +227,7 @@
 			background-color: #fff;
 			letter-spacing: 0.06em;
 			font-size: 12px;
+
 			.noticeTitle {
 				font-size: 10px;
 				padding: 2px;
@@ -186,6 +247,7 @@
 			font-size: 12px;
 			display: flex;
 			align-items: center;
+
 			// height: 100px;
 			.ticketBox {
 				flex: 1;
@@ -213,14 +275,14 @@
 			}
 		}
 
-		.scoreTitle{
+		.scoreTitle {
 			margin-top: 5px;
 			border-radius: 6px;
 			padding: 5px;
 			background-color: #fff;
 			letter-spacing: 0.06em;
 			font-size: 12px;
-			
+
 			.scoreBox {
 				font-size: 10px;
 				padding: 2px;
