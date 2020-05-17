@@ -69,19 +69,30 @@
 				commentNum: 5, //用户评价数量
 				sightId: 0,
 				sightDetail: {}, //景点详情
-				sightSrcList: [] //景点图片
+				sightSrcList: [], //景点图片
+				la: 0,
+				lo: 0
 			}
 		},
 		onLoad: function(option) { //option为object类型，会序列化上个页面传递的参数
 			// console.log(option.sightId); //打印出上个页面传递的参数。
 			this.sightId = option.sightId;
+			this.la = option.la;
+			this.lo = option.lo;
+			// console.log('pppppppppppppp')
+			// console.log(this.la)
 		},
 		created() {
 			this.getData()
 		},
 		methods: {
 			getData() {
-				//获取景点详情
+				this.getSightDetail();
+				this.getComment();
+				// this.getAddressName()
+			},
+			//获取景点详情
+			getSightDetail() {
 				uni.request({
 					url: 'http://117.78.2.192:8090/view/by_id',
 					method: 'POST',
@@ -95,12 +106,16 @@
 							// console.log(res.data.data[0])
 							this.sightDetail = res.data.data[0];
 							console.log(uni.getStorageSync("userId") + this.sightDetail.keep)
-							this.sightSrcList = this.sightDetail.viewPics.split(',')
+							this.sightSrcList = this.sightDetail.viewPics.split(',')							
 							// console.log(this.sightSrcList)
+							this.getAddressName()
 						}
 					}
 				})
-				//获取景点评价
+
+			},
+			//获取景点评价
+			getComment() {
 				uni.request({
 					url: 'http://117.78.2.192:8090/review/getReviews',
 					method: 'GET',
@@ -111,6 +126,8 @@
 						if (res.data.status == 200) {
 							console.log(res.data.data)
 							this.totalComments = res.data.data
+							console.log('&&&&&&&&')
+							console.log(this.totalComments)
 							if (res.data.data.length > 3) {
 								this.userComments = res.data.data.slice(0, 4)
 								this.currentCommentNum = 3; //设置当前评价数量
@@ -125,6 +142,23 @@
 						}
 					}
 				})
+			},
+			//获取地理位置名称
+			getAddressName() {
+				// console.log('lllllllaaaaaaaa')
+				// console.log(this.la)
+				// uni.request({ 
+				// 	url: "https://restapi.amap.com/v3/geocode/regeo",
+				// 	method:'GET',
+				// 	data: {
+				// 		key: "d99c0d2112f7f708b9a86094aca2b350",
+				// 		location: this.lo + ',' + this.la,
+				// 	},
+				// 	success: function(data) {
+				// 		console.log('mapppppppppppppppp')
+				// 		console.log(data);
+				// 	}
+				// })
 			},
 			//点击查看图片详情
 			clickPic(index) {
@@ -149,9 +183,9 @@
 			},
 			// 预定
 			order() {
-				uni.setStorageSync("status", -1);
 				uni.navigateTo({
-					url: '/pages/component/OrderDetails?sightId=' + this.sightId+'&price='+this.sightDetail.viewMoney+'&pictureSrc='+this.sightSrcList[0]
+					url: '/pages/component/OrderDetails?sightId=' + this.sightId + '&price=' + this.sightDetail.viewMoney +
+						'&pictureSrc=' + this.sightSrcList[0] + '&orderStatus=-1'
 				})
 			},
 			// 收藏功能

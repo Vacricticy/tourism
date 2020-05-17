@@ -2,7 +2,7 @@
 	<view>
 		<scroll-view scroll-y="true" class="scroll-Y" show-scrollbar="false" @scrolltolower="showMore">
 			<sight v-for="(item,index) in recommendSights" :key="index" :sight="item"></sight>
-			<uni-load-more status="loading"></uni-load-more>
+			<uni-load-more status="noMore"></uni-load-more>
 		</scroll-view>
 	</view>
 </template>
@@ -11,16 +11,17 @@
 	import sight from '../component/sight.vue'
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	export default {
+		props: ['recommendSights'],
 		components: {
 			sight,
 			uniLoadMore
 		},
 		created() {
-			this.getRecommendSights()
+			// this.getRecommendSights()
 		},
 		data() {
 			return {
-				recommendSights: []
+				// recommendSights: []
 			}
 		},
 		methods: {

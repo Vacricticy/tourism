@@ -4,11 +4,11 @@
 		<view class="box">
 			<view class="score">
 				<text>选择评分：</text>
-				<uni-rate value="3.9" :disabled="false" size="25"></uni-rate>
+				<uni-rate :value="score" :disabled="false" size="25"></uni-rate>
 				<text class="publish" @click="publish">发表</text>
 			</view>
 			<view class="content">
-				<textarea value="" placeholder="从多个角度评价该景点,可以帮助更多想要参观该景点的人" />
+				<textarea value="" placeholder="从多个角度评价该景点,可以帮助更多想要参观该景点的人" v-model="content" />
 				</view>
 		</view>
 	</view>
@@ -22,18 +22,47 @@
 		},
 		data() {
 			return {
-
+				orderId:0,
+				sightId:0,
+				content:'',
+				score:3
 			}
+		},
+		onLoad(option){
+			
+			console.log('**********')
+			console.log(option.orderId)
+			console.log(option.sightId)
+			this.orderId=option.orderId;
+			this.sightId=option.sightId;
 		},
 		methods: {
 			publish(){
-				uni.showToast({
-				    title: '发表成功',
-				    duration: 1200
-				});
-				uni.switchTab({
-				    url: '/pages/orders/Orders'
+				// console.log(this.content)
+				// console.log(this.score)
+				uni.request({
+					url:'http://117.78.2.192:8090/review/submit',
+					method:'POST',
+					data:{
+						  "orderId": this.orderId,
+						  "reviewContent": this.content,
+						  "reviewScore": 4,
+						  "userId": uni.getStorageSync('userId'),
+						  "viewId": this.sightId
+					}, 
+					success:(res)=>{
+								if(res.data.status==200){
+									uni.showToast({
+							title: '发表成功', 
+							duration: 1200
+						});
+						uni.switchTab({
+							url:  '/pages/orders/Orders'
+						})
+								}
+					}
 				})
+				
 			}
 		}
 	}
