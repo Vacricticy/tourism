@@ -10,10 +10,10 @@
 			</view>
 		</view>
 		<view class="status">
-			<image :src="statusList[order.status]" mode=""></image>
-			<text v-if="order.status==0">待付款</text>
-			<text v-if="order.status==1">待出行</text>
-			<text v-if="order.status==2">已评价</text>
+			<image :src="statusList[order.orderStatus]" mode=""></image>
+			<text v-if="order.orderStatus==0">待付款</text>
+			<text v-if="order.orderStatus==1">待出行</text>
+			<text v-if="order.orderStatus==2">已评价</text>
 		</view>
 	</view>
 </template>
@@ -38,11 +38,12 @@
 		},
 		methods: {
 			showOrderDetail() {
-				uni.setStorageSync("status", this.order.status);
+				// uni.setStorageSync("status", this.order.status);
 				uni.navigateTo({
 					url: '/pages/component/OrderDetails?sightId=' + this.order.viewId + '&price=' + this.order.orderMoney / this.order
 						.orderNum + '&pictureSrc=' + this.order.viewPics.split(',')[0] + '&isFromMyOrderPage=' + 'true' +
-						'&totalPrice=' + this.order.orderMoney + '&num=' + this.order.orderNum + '&date=' + this.order.orderTime
+						'&totalPrice=' + this.order.orderMoney + '&num=' + this.order.orderNum + '&date=' + this.order.orderTime +
+						'&orderStatus=' + this.order.orderStatus + '&orderId=' + this.order.id
 				})
 			}
 		}

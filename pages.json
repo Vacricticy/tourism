@@ -24,7 +24,8 @@
 		{
 			"path": "pages/myPage/MyPage",
 			"style": {
-				"navigationBarTitleText": "我的主页"
+				"navigationBarTitleText": "我的主页",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -72,7 +73,19 @@
 			"path": "pages/component/addComment",
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/component/baidu",
+            "style" : {
+				"navigationBarTitleText": "百度百科"
+			}
+        }
+        ,{
+            "path" : "pages/component/searchResult",
+            "style" : {
+				"navigationBarTitleText": "搜索结果"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

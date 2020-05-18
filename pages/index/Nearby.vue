@@ -2,7 +2,7 @@
 	<view>
 		<scroll-view scroll-y="true" class="scroll-Y">
 			<sight v-for="(item,index) in nearbySights" :key="index" :sight="item"></sight>
-			<uni-load-more status="loading"></uni-load-more>
+			<uni-load-more status="noMore"></uni-load-more>
 		</scroll-view>
 
 	</view>
@@ -12,16 +12,17 @@
 	import sight from '../component/sight.vue'
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	export default {
+		props: ['nearbySights'],
 		components: {
 			sight,
 			uniLoadMore
 		},
 		created() {
-			this.getNearbySights()
+			// this.getNearbySights()
 		},
 		data() {
 			return {
-				nearbySights: []
+				// nearbySights: []
 			}
 		},
 		methods: {

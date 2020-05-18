@@ -1,9 +1,12 @@
 <template>
-	<view>
-		<scroll-view scroll-y="true" class="scroll-Y" show-scrollbar="false" @scrolltolower="showMore">
-			<order-template v-for="(item,index) in orderList" :key="index" :order="item"></order-template>
-			<!-- <uni-load-more status="loading"></uni-load-more> -->
-		</scroll-view>
+	<view class="container">
+		<view class="">
+			<scroll-view scroll-y="true" class="scroll-Y" show-scrollbar="false" @scrolltolower="showMore">
+				<order-template v-for="(item,index) in orderList" :key="index" :order="item"></order-template>
+				<uni-load-more status="noMore"></uni-load-more>
+			</scroll-view>
+		</view>
+			
 	</view>
 </template>
 <script>
@@ -22,7 +25,7 @@
 		created() {
 			this.getAllOrders()
 		},
-		//下拉刷新
+		// 下拉刷新
 		onLoad: function(options) {
 			setTimeout(function() {
 				console.log('start pulldown');
@@ -69,8 +72,15 @@
 </script>
 
 <style lang="less" scoped>
+	.container{
+		height: calc(100%);
+		background-color: #F1F1F1;
+	}
+	// .container{
+	// 	background-color: #F1F1F1;
+	// }
 	.scroll-Y {
-		// height: 100%;
+		height: calc(100%);
 		box-sizing: border-box;
 		padding: 8px;
 		background-color: #F1F1F1;

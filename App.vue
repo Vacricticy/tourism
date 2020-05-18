@@ -14,4 +14,8 @@
 
 <style>
 	/*每个页面公共css */
+	uni-page-body,
+	#app {
+		height: calc(100%);
+	}
 </style>

@@ -10,15 +10,16 @@
 				<image src="../../static/index/location.png" mode="widthFix"></image>
 			</view>
 			<view class="search">
-				<input type="text" value="" placeholder="搜索景点" />
+				<input confirm-type="search" @confirm="search" value="" placeholder="搜索景点" v-model="searchName" />
 			</view>
 		</view>
+
 		<swiper :current="current" @change="changeNav" class="swiper">
 			<swiper-item>
-				<recommend></recommend>
+				<recommend :recommendSights="recommendSights"></recommend>
 			</swiper-item>
 			<swiper-item>
-				<nearby></nearby>
+				<nearby :nearbySights="nearbySights"></nearby>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -35,41 +36,114 @@
 
 		},
 		created() {
-			this.getLocation()
+			this.getRecommendData()
 		},
 		data() {
 			return {
 				current: 0,
-				location: ''
+				location: '',
+				recommendSights: [],
+				nearbySights: [],
+				searchName: '',
+				latitude: 0,
+				longitude: 0,
+				lalo: {}
 			}
 		},
-		onLoad() {
-
-		},
 		methods: {
-
+			async getRecommendData() {
+				let lalo = await this.getLocation();
+				this.lalo = lalo;
+				this.getRecommendSights(lalo)
+			},
+			async getNearbyData() {
+				let lalo = await this.getLocation();
+				this.lalo = lalo;
+				this.getNearbySights(lalo)
+			},
 			changeNav(e) {
 				this.current = e.detail.current
+				if (this.current == 0) {
+					this.getRecommendData()
+				} else if (this.current == 1) {
+					this.getNearbyData()
+				}
 			},
-			// 获取位置信息
-			getLocation() {
-				var that = this;
-				uni.getLocation({
-					type: 'wgs84',
-					geocode: true,
-					success: function(res) {
-						console.log('当前位置的经度：' + res.longitude);
-						console.log('当前位置的纬度2：' + res.latitude);
-						console.log(res.address.city)
-						that.location = res.address.city;
+			// 获取推荐页的景点详情
+			getRecommendSights(lalo) {
+				// console.log(this.longitude)
+				uni.request({
+					url: 'http://117.78.2.192:8090/view/info',
+					method: 'POST',
+					data: {
+						latitude: lalo.latitude,
+						longitude: lalo.longitude,
+						model: 'recommand',
+						name: ''
+					},
+					success: (res) => {
+						if (res.data.status == 200) {
+							this.recommendSights = res.data.data;
+						}
 					}
 				})
 			},
+			// 获取附近页的景点详情
+			getNearbySights(lalo) {
+				uni.request({
+					url: 'http://117.78.2.192:8090/view/info',
+					method: 'POST',
+					data: {
+						latitude: lalo.latitude,
+						longitude: lalo.longitude,
+						model: 'distance',
+						name: ''
+					},
+					success: (res) => {
+						if (res.data.status == 200) {
+							this.nearbySights = res.data.data;
+						}
+					}
+				})
+			},
+			// 获取位置信息
+			getLocation() {
+				return new Promise((resolve, reject) => {
+					var that = this;
+					uni.getLocation({
+						type: 'wgs84',
+						geocode: true,
+						success: function(res) {
+							this.longitude = res.longitude;
+							this.latitude = res.latitude;
+							console.log('当前位置的经度：' + this.longitude);
+							console.log('当前位置的纬度2：' + this.latitude);
+							console.log(res.address.city)
+							that.location = res.address.city;
+							let lalo = {
+								longitude: res.longitude,
+								latitude: res.latitude
+							}
+							//保存经纬度，便于访问地图时连线操作
+							uni.setStorageSync("la", res.latitude);
+							uni.setStorageSync("lo", res.longitude);
+							resolve(lalo);
+						}
+					})
+				})
+			},
 			// 跳转至地图界面
-			getMap(){
+			getMap() {
 				uni.navigateTo({
-					url: '/pages/component/map'
+					url: '/pages/component/map?la=' + this.lalo.latitude + '&lo=' + this.lalo.longitude
 				});
+			},
+			// 搜索功能
+			search() {
+				uni.navigateTo({
+					url: '/pages/component/searchResult?searchName=' + this.searchName + '&la=' + this.lalo.latitude + '&lo=' + this
+						.lalo.longitude
+				})
 			}
 		}
 	}
@@ -119,9 +193,11 @@
 			padding-right: 5px;
 			display: flex;
 			cursor: pointer;
-			text{
-				flex:1
+
+			text {
+				flex: 1
 			}
+
 			image {
 				width: 20px;
 				height: 20px;
@@ -132,10 +208,20 @@
 			height: 100%;
 			box-sizing: border-box;
 			padding-left: 5px;
-			flex-basis: 80%;
+			flex-basis: 70%;
 			border: 1px solid #C8C7CC;
 			border-radius: 8px;
 			box-shadow: 0 0 10px #C8C7CC;
+		}
+
+		.searchButtom {
+			margin-left: 10px;
+			font-size: 15px;
+			background-color: #fff;
+			border-radius: 4px;
+			box-shadow: 2px 2px 6px #999999;
+			padding-left: 2px;
+			padding-right: 2px;
 		}
 	}
 </style>

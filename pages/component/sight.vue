@@ -10,8 +10,8 @@
 				<text class="score">{{sight.viewScore}}分</text>
 				<text>| {{sight.viewMarkNum}}条评价</text>
 			</view>
-			<view class="distance">
-				距我{{sight.distance}}km
+			<view class="distance" v-if="sight.distance">
+				距我{{sight.distance?sight.distance:100}}km
 			</view>
 			<view class="price">
 				￥{{sight.viewMoney}}
@@ -36,7 +36,9 @@
 		},
 		methods: {
 			showSightDetail() {
-				let url = '/pages/sightDetails/SightDetails?sightId=' + this.sight.id;
+				// console.log('wwwwwwwwwwwww')
+				// console.log(this.sight.viewLatitude)
+				let url = '/pages/sightDetails/SightDetails?sightId=' + this.sight.id+'&la='+this.sight.viewLatitude+'&lo='+this.sight.viewLongitude;
 				uni.navigateTo({
 					url: url
 				})

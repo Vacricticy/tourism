@@ -33,13 +33,13 @@
 					<text class="textBox" @click="preOrder">立即预定</text>
 				</view>
 				<view class="handle" v-if="status==0">
-					<text class="textBox" @click="pay">立即付款</text>
+					<text class="textBox orderUnpayed" @click="pay">立即付款</text>
 				</view>
 				<view class="handle" v-if="status==1">
 					<text class="textBox" @click="addComment">立即评价</text>
 				</view>
 				<view class="handle" v-if="status==2">
-					<text class="textBox">已评价</text>
+					<text class="textBox orderDone">已评价</text>
 				</view>
 			</view>
 			<view>
@@ -72,6 +72,9 @@
 				sightId: 0,
 				orderNum: 1,
 				totalPrice: 0,
+				isFromMyOrderPage: false,
+				orderStatus: 0,
+				orderId: 0 //来源1：预定之后直接产生，来源2：从我的订单页面传递参数
 			}
 		},
 		onLoad(option) {
@@ -81,18 +84,18 @@
 			if (option.isFromMyOrderPage) {
 				this.isFromMyOrderPage = true
 			}
+			let today = new Date()
+			let todayDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
 			this.orderNum = option.num ? option.num : 1
 			this.totalPrice = option.totalPrice ? option.totalPrice : 0
-			this.date = option.date ? option.date : ''
+			this.date = option.date ? option.date : todayDate
+			this.status = option.orderStatus ? option.orderStatus : 0
+			this.orderId = option.orderId ? option.orderId : 0
 			// console.log(this.sightId)
-			// console.log(this.price)
-			// console.log(this.pictureSrc)
 		},
 		created() {
-			this.status = uni.getStorageSync("status");
-			console.log("orderStatus:" + uni.getStorageSync("status"))
-			let today = new Date()
-			this.date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+			// let today = new Date()
+			// this.date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
 		},
 		methods: {
 			open() {
@@ -106,7 +109,7 @@
 			},
 			addComment() {
 				uni.navigateTo({
-					url: '/pages/component/addComment'
+					url: '/pages/component/addComment?orderId=' + this.orderId + '&sightId=' + this.sightId
 				})
 			},
 			// 预定功能
@@ -125,6 +128,8 @@
 					},
 					success: (res) => {
 						if (res.data.status == 200) {
+							console.log('ggggggg' + res.data.data)
+							this.orderId = res.data.data
 							uni.showToast({
 								title: "预定成功",
 								duration: 1500
@@ -136,14 +141,22 @@
 			},
 			//支付功能
 			pay() {
-				// uni.request({
-				// 	url:'http://117.78.2.192:8090/order/reserve'
-				// })
-				// uni.showToast({
-				// 	title: "支付成功",
-				// 	duration: 1500
-				// })
-				// this.status = 1
+				uni.request({
+					url: 'http://117.78.2.192:8090/order/pay',
+					method: 'GET',
+					data: {
+						dataId: this.orderId
+					},
+					success: (res) => {
+						if (res.data.status == 200) {
+							uni.showToast({
+								title: "支付成功",
+								duration: 1500
+							})
+							this.status = 1
+						}
+					}
+				})
 			},
 		},
 		computed: {
@@ -243,5 +256,13 @@
 	.postComment {
 		height: 200px;
 		background-color: #007AFF;
+	}
+
+	.orderDone {
+		background-color: #49d360;
+	}
+
+	.orderUnpayed {
+		background-color: #f06c4b;
 	}
 </style>

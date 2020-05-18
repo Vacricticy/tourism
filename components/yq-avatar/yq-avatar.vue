@@ -1341,5 +1341,6 @@
 		border-radius: 5px;
 		color: #fff;
 		background-color: #39baff;
+		box-shadow: 2px 2px 6px #C8C7CC;
 	}
 </style>
